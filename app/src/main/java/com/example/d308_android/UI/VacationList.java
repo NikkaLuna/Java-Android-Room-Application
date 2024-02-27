@@ -44,10 +44,6 @@ private Repository repository;
         vacationAdapter.setVacations(allVacations);
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_vacation_list, menu);
-        return true;
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.sample) {
@@ -70,5 +66,23 @@ private Repository repository;
         return true;
     }
 
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_vacation_list, menu);
+        return true;
+    }
+
+    //UPDATES VACATIONS UPON SAVE
+    //retrieves items from the database again and puts it on the recycler view
+    @Override
+    protected void onResume() {
+        super.onResume();
+        List<Vacation> allVacations = repository.getAllVacations();
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        final VacationAdapter vacationAdapter = new VacationAdapter(this);
+        recyclerView.setAdapter(vacationAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        vacationAdapter.setVacations(allVacations);
+    }
 
 }
