@@ -38,12 +38,12 @@ public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.Vacati
                     int position=getAdapterPosition();
                     final Vacation current=mVacations.get(position);
                     Intent intent=new Intent(context, VacationDetails.class);
-                    intent.putExtra("id", current.getVacationID());
-                    intent.putExtra("name", current.getVacationName());
-                    intent.putExtra("price", current.getPrice());
-                    intent.putExtra("hotel_name", current.getHotelName());
-                    intent.putExtra("start_date", current.getStartDate());
-                    intent.putExtra("end_date", current.getEndDate());
+                    intent.putExtra("vacationID", current.getVacationID());
+                    intent.putExtra("vacationName", current.getVacationName());
+                    intent.putExtra("vacationPrice", current.getPrice());
+                    intent.putExtra("hotelName", current.getHotelName());
+                    intent.putExtra("startDate", current.getStartDate());
+                    intent.putExtra("endDate", current.getEndDate());
                     context.startActivity(intent);
 
                 }

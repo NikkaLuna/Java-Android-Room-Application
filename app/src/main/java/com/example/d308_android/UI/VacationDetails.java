@@ -32,8 +32,6 @@ public class VacationDetails extends AppCompatActivity {
     EditText editHotelName;
     EditText editStartDate;
     EditText editEndDate;
-
-
     Repository repository;
 
     @Override
@@ -49,10 +47,10 @@ public class VacationDetails extends AppCompatActivity {
         editStartDate = findViewById(R.id.startdate);
         editEndDate = findViewById(R.id.enddate);
 
-        vacationID = getIntent().getIntExtra("id", -1);
-        name = getIntent().getStringExtra("name");
-        price = getIntent().getDoubleExtra("price", 0.0);
-        hotelName = getIntent().getStringExtra("hotel_name");
+        vacationID = getIntent().getIntExtra("vacationID", -1);
+        name = getIntent().getStringExtra("vacationName");
+        price = getIntent().getDoubleExtra("vacationPrice", 0.0);
+        hotelName = getIntent().getStringExtra("hotelName");
 
         editName.setText(name);
         editPrice.setText(Double.toString(price));
@@ -110,7 +108,41 @@ public class VacationDetails extends AppCompatActivity {
             }
             this.finish();
             return true;
+
+        } else if (itemId == R.id.addSampleExcursions) {
+            Toast.makeText(VacationDetails.this, "Put in sample data", Toast.LENGTH_LONG).show();
+            return true;
+
+        } else if (itemId == R.id.share) {
+
+            String name = editName.getText().toString();
+            String price = editPrice.getText().toString();
+            String hotelName = editHotelName.getText().toString();
+            String startDate = editStartDate.getText().toString();
+            String endDate = editEndDate.getText().toString();
+
+            if(name.isEmpty() || price.isEmpty() || hotelName.isEmpty() || startDate.isEmpty() || endDate.isEmpty()) {
+                Toast.makeText(this, "Please fill in all details before sharing.", Toast.LENGTH_LONG).show();
+                return true;
+            }
+
+            String shareText = "Vacation Details:\n" +
+                    "Name: " + name + "\n" +
+                    "Price: $" + price + "\n" +
+                    "Hotel: " + hotelName + "\n" +
+                    "Start Date: " + startDate + "\n" +
+                    "End Date: " + endDate;
+
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+            sendIntent.setType("text/plain");
+
+            Intent shareIntent = Intent.createChooser(sendIntent, null);
+            startActivity(shareIntent);
+            return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
