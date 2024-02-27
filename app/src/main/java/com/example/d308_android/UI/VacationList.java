@@ -1,6 +1,8 @@
 package com.example.d308_android.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ import com.example.d308_android.database.Repository;
 import com.example.d308_android.entities.Excursion;
 import com.example.d308_android.entities.Vacation;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 public class VacationList extends AppCompatActivity {
 private Repository repository;
@@ -31,8 +35,15 @@ private Repository repository;
             }
         });
 
-        System.out.println(getIntent().getStringExtra("test"));
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        repository = new Repository(getApplication());
+        List<Vacation> allVacations = repository.getAllVacations();
+        final VacationAdapter vacationAdapter = new VacationAdapter(this);
+        recyclerView.setAdapter(vacationAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        vacationAdapter.setVacations(allVacations);
     }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_vacation_list, menu);
         return true;

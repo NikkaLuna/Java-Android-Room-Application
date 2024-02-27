@@ -7,6 +7,7 @@
     tools:context=".UI.VacationDetails">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="409dp"
         android:layout_height="300dp"
         android:background="#49AFBC"
@@ -31,7 +32,7 @@
 
         <EditText
             android:id="@+id/titletext"
-            android:text="Vacation Title"
+            android:hint="Vacation Title"
             android:layout_height="50dp"
             android:layout_width="wrap_content"></EditText>
         />
@@ -52,7 +53,7 @@
 
                 <EditText
                     android:id="@+id/hotelname"
-                    android:text="Hotel Name"
+                    android:hint="Hotel Name"
                     android:layout_height="50dp"
                     android:layout_width="wrap_content"></EditText>
                 />
@@ -73,7 +74,7 @@
 
                 <EditText
                     android:id="@+id/price"
-                    android:text="Vacation Title"
+                    android:hint="Price"
                     android:layout_height="50dp"
                     android:layout_width="wrap_content"></EditText>
                 />
@@ -94,7 +95,7 @@
 
                 <EditText
                     android:id="@+id/startdate"
-                    android:text="Vacation Title"
+                    android:hint="Start Date"
                     android:layout_height="50dp"
                     android:layout_width="wrap_content"></EditText>
                 />
@@ -115,7 +116,7 @@
 
                 <EditText
                     android:id="@+id/enddate"
-                    android:text="Vacation Title"
+                    android:hint="End Date"
                     android:layout_height="50dp"
                     android:layout_width="wrap_content"></EditText>
                 />
@@ -137,4 +138,13 @@
         app:srcCompat="@drawable/baseline_add_24"
         tools:layout_editor_absoluteX="328dp"
         tools:layout_editor_absoluteY="646dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/excursionrecyclerview"
+        android:layout_width="409dp"
+        android:layout_height="357dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="301dp"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView"
+        app:layout_constraintLeft_toLeftOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
