@@ -208,30 +208,8 @@ public class ExcursionDetails extends AppCompatActivity {
         if (item.getItemId() == R.id.notify) {
             String dateFromScreen = editDate.getText().toString();
             String excursionName = getIntent().getStringExtra("excursionName");
-            String myFormat = "MM/dd/yy";
-            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-            Date myDate = null;
-            try {
-                myDate = sdf.parse(dateFromScreen);
-            } catch (ParseException | java.text.ParseException e) {
-                e.printStackTrace();
-            }
-            Long trigger = myDate.getTime();
-            Intent intent = new Intent(ExcursionDetails.this, MyReceiver.class);
-            intent.putExtra("key", "message I want to see");
-            PendingIntent sender=PendingIntent.getBroadcast(ExcursionDetails.this, ++MainActivity.numAlert, intent, PendingIntent.FLAG_IMMUTABLE);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, sender);
-
-            return true;
-        }
 
 
-/*
-        if (item.getItemId() == R.id.notify) {
-            //String excursionName = getIntent().getStringExtra("excursionName");
-            String dateFromScreen = editDate.getText().toString();
-            String excursionTitle = "Your Excursion Title: " + excursionName;
             String myFormat = "MM/dd/yy";
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
@@ -241,21 +219,19 @@ public class ExcursionDetails extends AppCompatActivity {
             } catch (ParseException | java.text.ParseException e) {
                 e.printStackTrace();
             }
+
             Long trigger = myDate.getTime();
-
-
             Intent intent = new Intent(ExcursionDetails.this, MyReceiver.class);
-            intent.putExtra("key", "Your excursion '" + excursionTitle + "' is starting on " + dateFromScreen);
+            intent.putExtra("key", "Your excursion '" + excursionName + "' is starting on " + dateFromScreen);
 
             int pendingIntentId = generateRandomNumber();
 
             PendingIntent sender = PendingIntent.getBroadcast(ExcursionDetails.this, pendingIntentId, intent, PendingIntent.FLAG_IMMUTABLE);
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, sender);
-            return true;
 
+            return true;
         }
-*/
 
         return super.onOptionsItemSelected(item);
     }
