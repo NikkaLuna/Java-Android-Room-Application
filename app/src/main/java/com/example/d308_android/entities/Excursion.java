@@ -49,6 +49,9 @@ public class Excursion {
     public void setVacationID(int vacationID) {
         this.vacationID = vacationID;
     }
+    public String toString(){
+        return excursionName;
+    }
 
 }
 

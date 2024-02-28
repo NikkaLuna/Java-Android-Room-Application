@@ -15,8 +15,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.d308_android.R;
@@ -24,6 +27,7 @@ import com.example.d308_android.database.Repository;
 import com.example.d308_android.entities.Excursion;
 import com.example.d308_android.entities.Vacation;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
@@ -67,6 +71,46 @@ public class ExcursionDetails extends AppCompatActivity {
         String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
+        Spinner spinner = findViewById(R.id.spinner);
+        EditText excursionName = findViewById(R.id.excursionName);
+
+        ArrayList<Excursion> excursionArrayList = new ArrayList<>();
+        excursionArrayList.addAll(repository.getAllExcursions());
+
+        ArrayAdapter<Excursion> excursionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, excursionArrayList);
+        excursionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(excursionAdapter);
+
+        spinner.setSelection(0);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Excursion selectedExcursion = (Excursion) parent.getItemAtPosition(position);
+                excursionName.setText(selectedExcursion.toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                excursionName.setText("");
+            }
+        });
+
+
+        startDate = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                myCalendarStart.set(Calendar.YEAR, year);
+                myCalendarStart.set(Calendar.MONTH, monthOfYear);
+                myCalendarStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                updateLabelStart();
+            }
+        };
+
+
+
+
         editDate.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -84,17 +128,35 @@ public class ExcursionDetails extends AppCompatActivity {
                         myCalendarStart.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-        startDate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                myCalendarStart.set(Calendar.YEAR, year);
-                myCalendarStart.set(Calendar.MONTH, monthOfYear);
-                myCalendarStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                updateLabelStart();
-            }
-        };
     }
+
+
+
+
+  /*
+
+        Spinner spinner=findViewById(R.id.spinner);
+        ArrayList<Vacation> vacationArrayList= new ArrayList<>();
+        vacationArrayList.addAll(repository.getAllVacations());
+        ArrayAdapter<Vacation> vacationAdapter= new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,vacationArrayList);
+        spinner.setAdapter(vacationAdapter);
+        spinner.setSelection(0);
+
+
+
+        ArrayList<Vacation> vacationArrayList= new ArrayList<>();
+        vacationArrayList.addAll(repository.getAllVacations());
+        ArrayList<Integer> vacationIdList= new ArrayList<>();
+        for(Vacation vacation:vacationArrayList){
+            vacationIdList.add(vacation.getVacationID());
+        }
+
+        ArrayAdapter<Integer> vacationIdAdapter= new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item,vacationIdList);
+        Spinner spinner=findViewById(R.id.spinner);
+        spinner.setAdapter(vacationIdAdapter);
+ */
+
     private void updateLabelStart() {
         String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -116,6 +178,7 @@ public class ExcursionDetails extends AppCompatActivity {
             onBackPressed();
             return true;
         }
+        //this is currently saving all excursions not assigned to vacations as vacationID -1
         if (item.getItemId()== R.id.excursionsave){
             Excursion excursion;
             if (excursionID == -1) {
