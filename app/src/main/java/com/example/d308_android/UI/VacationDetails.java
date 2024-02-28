@@ -40,6 +40,8 @@ public class VacationDetails extends AppCompatActivity {
     EditText editStartDate;
     EditText editEndDate;
     Repository repository;
+    Vacation currentVacation;
+    int numExcursions;
     DatePickerDialog.OnDateSetListener startDate;
     DatePickerDialog.OnDateSetListener endDate;
     private Calendar myCalendarStart = Calendar.getInstance();
@@ -190,7 +192,28 @@ public class VacationDetails extends AppCompatActivity {
             this.finish();
             return true;
 
-        } else if (itemId == R.id.addSampleExcursions) {
+        }
+
+        if (itemId == R.id.vacationdelete) {
+            for (Vacation vacation : repository.getAllVacations()) {
+                if (vacation.getVacationID() == vacationID) currentVacation = vacation;
+            }
+            numExcursions = 0;
+            for (Excursion excursion : repository.getAllExcursions()) {
+                if (excursion.getVacationID() == vacationID) ++numExcursions;
+                VacationDetails.this.finish();
+            }
+            if(numExcursions==0){
+                repository.delete(currentVacation);
+                Toast.makeText(VacationDetails.this, currentVacation.getVacationName()  + " was deleted", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(VacationDetails.this, "Can't delete a product with parts", Toast.LENGTH_LONG).show();
+            }
+            return true;
+        }
+
+
+        else if (itemId == R.id.addSampleExcursions) {
             Toast.makeText(VacationDetails.this, "Put in sample data", Toast.LENGTH_LONG).show();
             return true;
 
