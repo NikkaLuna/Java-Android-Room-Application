@@ -11,6 +11,13 @@ public class Excursion {
     private double price;
     private int vacationID;
 
+    public Excursion(int excursionID, String excursionName, double price, int vacationID) {
+        this.excursionID = excursionID;
+        this.excursionName = excursionName;
+        this.price = price;
+        this.vacationID = vacationID;
+    }
+
     public int getExcursionID() {
         return excursionID;
     }
@@ -43,13 +50,5 @@ public class Excursion {
         this.vacationID = vacationID;
     }
 
-    public Excursion(int excursionID, String excursionName, double price, int vacationID) {
-        this.excursionID = excursionID;
-        this.excursionName = excursionName;
-        this.price = price;
-        this.vacationID = vacationID;
-
-
-    }
 }
 

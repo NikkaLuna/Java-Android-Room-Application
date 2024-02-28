@@ -21,6 +21,8 @@ import android.widget.TextView;
 
 import com.example.d308_android.R;
 import com.example.d308_android.database.Repository;
+import com.example.d308_android.entities.Excursion;
+import com.example.d308_android.entities.Vacation;
 
 import java.util.Date;
 import java.util.Locale;
@@ -114,6 +116,23 @@ public class ExcursionDetails extends AppCompatActivity {
             onBackPressed();
             return true;
         }
+        if (item.getItemId()== R.id.excursionsave){
+            Excursion excursion;
+            if (excursionID == -1) {
+                if (repository.getAllExcursions().size() == 0) excursionID = 1;
+                else
+                    excursionID = repository.getAllExcursions().get(repository.getAllExcursions().size() - 1).getExcursionID() + 1;
+                excursion = new Excursion(excursionID, editName.getText().toString(), Double.parseDouble(editPrice.getText().toString()), vacationID);
+                repository.insert(excursion);
+                this.finish();
+            } else {
+                excursion = new Excursion(excursionID, editName.getText().toString(), Double.parseDouble(editPrice.getText().toString()), vacationID);
+                repository.update(excursion);
+                this.finish();
+            }
+            this.finish();
+            return true;
+        }
 
         if (itemId == R.id.share) {
         Intent sentIntent = new Intent();
@@ -124,7 +143,8 @@ public class ExcursionDetails extends AppCompatActivity {
         Intent shareIntent = Intent.createChooser(sentIntent, null);
         startActivity(shareIntent);
         return true;
-    }
+        }
+
         if (item.getItemId() == R.id.notify) {
             String dateFromScreen = editDate.getText().toString();
             String myFormat = "MM/dd/yy";
