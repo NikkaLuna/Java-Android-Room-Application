@@ -11,11 +11,14 @@ public class Excursion {
     private double price;
     private int vacationID;
 
-    public Excursion(int excursionID, String excursionName, double price, int vacationID) {
+    public String startDate;
+
+    public Excursion(int excursionID, String excursionName, double price, int vacationID, String startDate) {
         this.excursionID = excursionID;
         this.excursionName = excursionName;
         this.price = price;
         this.vacationID = vacationID;
+        this.startDate = startDate;
     }
 
     public int getExcursionID() {
@@ -48,6 +51,14 @@ public class Excursion {
 
     public void setVacationID(int vacationID) {
         this.vacationID = vacationID;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
     public String toString(){
         return excursionName;

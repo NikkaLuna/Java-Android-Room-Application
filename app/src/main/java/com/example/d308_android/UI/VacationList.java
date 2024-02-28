@@ -55,9 +55,9 @@ private Repository repository;
             repository.insert(vacation);
             vacation=new Vacation(0, "Japan", 1500, "Miaki Hotel", "02/02/24", "02/19/24");
             repository.insert(vacation);
-            Excursion excursion=new Excursion(0, "Garden Tour", 300, 1);
+            Excursion excursion=new Excursion(0, "Garden Tour", 300, 1, "02/02/24");
             repository.insert(excursion);
-            excursion=new Excursion(0, "Cheese Tour", 400, 1);
+            excursion=new Excursion(0, "Cheese Tour", 400, 1, "02/02/24");
             repository.insert(excursion);
             return true;
         }

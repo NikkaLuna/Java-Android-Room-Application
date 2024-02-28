@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
@@ -28,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class VacationDetails extends AppCompatActivity {
     String name;
@@ -47,6 +51,9 @@ public class VacationDetails extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener endDate;
     private Calendar myCalendarStart = Calendar.getInstance();
     private Calendar myCalendarEnd = Calendar.getInstance();
+    long startTimeInMillis = myCalendarStart.getTimeInMillis();
+    long endTimeInMillis = myCalendarEnd.getTimeInMillis();
+    String vacationTitle = "My Vacation";
 
 
     @Override
@@ -188,10 +195,13 @@ public class VacationDetails extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
         if (itemId == R.id.vacationsave) {
-
             Vacation vacation;
-
             if (vacationID == -1) {
                 if (repository.getAllVacations().size() == 0) vacationID = 1;
                 else
@@ -263,8 +273,61 @@ public class VacationDetails extends AppCompatActivity {
             startActivity(shareIntent);
             return true;
         }
+        if (item.getItemId() == R.id.notify) {
+            String startDateFromScreen = editStartDate.getText().toString();
+            String endDateFromScreen = editEndDate.getText().toString();
+
+            String myFormat = "MM/dd/yy";
+            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+            Date startDate = null;
+            Date endDate = null;
+            try {
+                startDate = sdf.parse(startDateFromScreen);
+                endDate = sdf.parse(endDateFromScreen);
+            } catch (androidx.core.net.ParseException | java.text.ParseException e) {
+                e.printStackTrace();
+            }
+
+            if (startDate != null && endDate != null) {
+                Calendar startTimeCalendar = Calendar.getInstance();
+                startTimeCalendar.setTime(startDate);
+                startTimeCalendar.set(Calendar.HOUR_OF_DAY, 0); // Start time at midnight
+                startTimeCalendar.set(Calendar.MINUTE, 0);
+                startTimeCalendar.set(Calendar.SECOND, 0);
+
+                Calendar endTimeCalendar = Calendar.getInstance();
+                endTimeCalendar.setTime(endDate);
+                endTimeCalendar.set(Calendar.HOUR_OF_DAY, 23); // End time at 11:59 PM
+                endTimeCalendar.set(Calendar.MINUTE, 59);
+                endTimeCalendar.set(Calendar.SECOND, 59);
+
+                long startTimeInMillis = startTimeCalendar.getTimeInMillis();
+                long endTimeInMillis = endTimeCalendar.getTimeInMillis();
+
+                String vacationTitle = "My Vacation";
+
+                Intent intent = new Intent(VacationDetails.this, MyReceiver.class);
+                intent.setAction("VACATION_ALERT");
+                intent.putExtra("start_time", startTimeInMillis);
+                intent.putExtra("end_time", endTimeInMillis);
+                intent.putExtra("vacation_title", vacationTitle);
+                intent.putExtra("key", "message I want to see");
+
+                int pendingIntentId = generateRandomNumber();
+
+                PendingIntent sender = PendingIntent.getBroadcast(VacationDetails.this, pendingIntentId, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, startTimeInMillis, sender);
+            }
+            return true;
+        }
+
 
         return super.onOptionsItemSelected(item);
+    }
+    private int generateRandomNumber() {
+        Random random = new Random();
+        return random.nextInt(1000);
     }
     @Override
     protected void onResume() {

@@ -14,7 +14,7 @@
         android:icon="@drawable/baseline_airplanemode_active_24"
         android:id="@+id/share"/>
 
-    <item android:title="Notify"
+    <item android:title="Set Notification"
         android:orderInCategory="100"
         android:id="@+id/notify"/>
 </menu>

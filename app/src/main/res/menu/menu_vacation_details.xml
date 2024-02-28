@@ -16,4 +16,8 @@
     <item android:title="Add Sample Excursions"
         android:id="@+id/addSampleExcursions"/>
 
+    <item android:title="Set Notification"
+        android:orderInCategory="100"
+        android:id="@+id/notify"/>
+
 </menu>

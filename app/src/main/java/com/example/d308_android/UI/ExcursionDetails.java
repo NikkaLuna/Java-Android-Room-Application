@@ -42,7 +42,8 @@ public class ExcursionDetails extends AppCompatActivity {
     EditText editName;
     EditText editPrice;
     EditText editNote;
-    TextView editDate;
+    EditText editDate;
+
     Repository repository;
 
     DatePickerDialog.OnDateSetListener startDate;
@@ -70,6 +71,8 @@ public class ExcursionDetails extends AppCompatActivity {
 
         String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        String excursionStartDate = getIntent().getStringExtra("startDate");
 
         Spinner spinner = findViewById(R.id.spinner);
         EditText excursionName = findViewById(R.id.excursionName);
@@ -104,10 +107,22 @@ public class ExcursionDetails extends AppCompatActivity {
                 myCalendarStart.set(Calendar.MONTH, monthOfYear);
                 myCalendarStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                updateLabelStart();
+                updateLabel(editDate, myCalendarStart);
             }
         };
 
+        String startDateStr = getIntent().getStringExtra("startDate");
+
+        if (startDateStr != null && !startDateStr.isEmpty()) {
+            try {
+                Date date = sdf.parse(startDateStr);
+                Log.d(getApplicationContext().getPackageName(), "Parsed start date: " + date);
+                myCalendarStart.setTime(date);
+                updateLabel(editDate, myCalendarStart);
+            } catch (java.text.ParseException e) {
+                e.printStackTrace();
+            }
+        }
 
 
         editDate.setOnClickListener(new View.OnClickListener() {
@@ -131,12 +146,20 @@ public class ExcursionDetails extends AppCompatActivity {
     }
 
 
+    private void updateLabel(EditText editText, Calendar calendar) {
+        String myFormat = "MM/dd/yy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        //editText.setText(sdf.format(calendar.getTime()));
+        editDate.setText(sdf.format(myCalendarStart.getTime()));
+    }
+
+    /*
     private void updateLabelStart() {
         String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         editDate.setText(sdf.format(myCalendarStart.getTime()));
     }
-
+*/
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_excursion_details, menu);
@@ -159,11 +182,11 @@ public class ExcursionDetails extends AppCompatActivity {
                 if (repository.getAllExcursions().size() == 0) excursionID = 1;
                 else
                     excursionID = repository.getAllExcursions().get(repository.getAllExcursions().size() - 1).getExcursionID() + 1;
-                excursion = new Excursion(excursionID, editName.getText().toString(), Double.parseDouble(editPrice.getText().toString()), vacationID);
+                excursion = new Excursion(excursionID, editName.getText().toString(), Double.parseDouble(editPrice.getText().toString()), vacationID, editDate.getText().toString());
                 repository.insert(excursion);
                 this.finish();
             } else {
-                excursion = new Excursion(excursionID, editName.getText().toString(), Double.parseDouble(editPrice.getText().toString()), vacationID);
+                excursion = new Excursion(excursionID, editName.getText().toString(), Double.parseDouble(editPrice.getText().toString()), vacationID, editDate.getText().toString());
                 repository.update(excursion);
                 this.finish();
             }
@@ -184,6 +207,7 @@ public class ExcursionDetails extends AppCompatActivity {
 
         if (item.getItemId() == R.id.notify) {
             String dateFromScreen = editDate.getText().toString();
+            String excursionName = getIntent().getStringExtra("excursionName");
             String myFormat = "MM/dd/yy";
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
             Date myDate = null;
@@ -195,6 +219,33 @@ public class ExcursionDetails extends AppCompatActivity {
             Long trigger = myDate.getTime();
             Intent intent = new Intent(ExcursionDetails.this, MyReceiver.class);
             intent.putExtra("key", "message I want to see");
+            PendingIntent sender=PendingIntent.getBroadcast(ExcursionDetails.this, ++MainActivity.numAlert, intent, PendingIntent.FLAG_IMMUTABLE);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, sender);
+
+            return true;
+        }
+
+
+/*
+        if (item.getItemId() == R.id.notify) {
+            //String excursionName = getIntent().getStringExtra("excursionName");
+            String dateFromScreen = editDate.getText().toString();
+            String excursionTitle = "Your Excursion Title: " + excursionName;
+            String myFormat = "MM/dd/yy";
+            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+            Date myDate = null;
+            try {
+                myDate = sdf.parse(dateFromScreen);
+            } catch (ParseException | java.text.ParseException e) {
+                e.printStackTrace();
+            }
+            Long trigger = myDate.getTime();
+
+
+            Intent intent = new Intent(ExcursionDetails.this, MyReceiver.class);
+            intent.putExtra("key", "Your excursion '" + excursionTitle + "' is starting on " + dateFromScreen);
 
             int pendingIntentId = generateRandomNumber();
 
@@ -202,7 +253,10 @@ public class ExcursionDetails extends AppCompatActivity {
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, sender);
             return true;
+
         }
+*/
+
         return super.onOptionsItemSelected(item);
     }
     private int generateRandomNumber() {
