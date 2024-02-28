@@ -24,6 +24,7 @@ import com.example.d308_android.database.Repository;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 public class ExcursionDetails extends AppCompatActivity {
 
@@ -137,12 +138,18 @@ public class ExcursionDetails extends AppCompatActivity {
             Long trigger = myDate.getTime();
             Intent intent = new Intent(ExcursionDetails.this, MyReceiver.class);
             intent.putExtra("key", "message I want to see");
-            PendingIntent sender=PendingIntent.getBroadcast(ExcursionDetails.this, ++MainActivity.numAlert, intent, PendingIntent.FLAG_IMMUTABLE);
+
+            int pendingIntentId = generateRandomNumber();
+
+            PendingIntent sender = PendingIntent.getBroadcast(ExcursionDetails.this, pendingIntentId, intent, PendingIntent.FLAG_IMMUTABLE);
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, sender);
-
-        return true;
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    private int generateRandomNumber() {
+        Random random = new Random();
+        return random.nextInt(1000);
     }
 }

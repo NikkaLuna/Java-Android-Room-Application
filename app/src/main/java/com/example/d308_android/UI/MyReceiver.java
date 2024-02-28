@@ -19,6 +19,9 @@ import androidx.core.content.ContextCompat;
 
 
 import com.example.d308_android.R;
+
+import java.util.UUID;
+
 public class MyReceiver extends BroadcastReceiver {
 
     String channel_id = "test";
@@ -29,27 +32,33 @@ public class MyReceiver extends BroadcastReceiver {
 
         Toast.makeText(context, intent.getStringExtra("key"), Toast.LENGTH_LONG).show();
         createNotificationChannel(context, channel_id);
-        Notification n = new NotificationCompat.Builder(context, channel_id)
+        Notification n=new NotificationCompat.Builder(context, channel_id)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentText(intent.getStringExtra("key"))
                 .setContentTitle("NotificationTest").build();
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(notificationID++, n);
+        NotificationManager notificationManager=(NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(notificationID++,n);
 
     }
 
-    //channelId might be null or empty when the createNotificationChannel method is called
+
     private void createNotificationChannel(Context context, String CHANNEL_ID) {
-        CharSequence name = "mychannelname";
-        String description = "mychanneldescription";
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        if (CHANNEL_ID == null || CHANNEL_ID.isEmpty()) {
+            CHANNEL_ID = generateRandomChannelId();
+        }
+        CharSequence name ="mychannelname";
+        String description="mychanneldescription";
+        int importance= NotificationManager.IMPORTANCE_DEFAULT;
         //CharSequence name = context.getResources().getString(R.string.channel_name);
         //String description = context.getString(R.string.channel_description);
         //int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
         channel.setDescription(description);
-        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+        NotificationManager notificationManager=context.getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
+    }
+    private String generateRandomChannelId() {
+        return UUID.randomUUID().toString();
     }
 }
