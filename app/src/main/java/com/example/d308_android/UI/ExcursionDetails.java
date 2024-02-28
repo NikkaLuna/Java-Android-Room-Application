@@ -110,7 +110,6 @@ public class ExcursionDetails extends AppCompatActivity {
 
 
 
-
         editDate.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -131,31 +130,6 @@ public class ExcursionDetails extends AppCompatActivity {
 
     }
 
-
-
-
-  /*
-
-        Spinner spinner=findViewById(R.id.spinner);
-        ArrayList<Vacation> vacationArrayList= new ArrayList<>();
-        vacationArrayList.addAll(repository.getAllVacations());
-        ArrayAdapter<Vacation> vacationAdapter= new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,vacationArrayList);
-        spinner.setAdapter(vacationAdapter);
-        spinner.setSelection(0);
-
-
-
-        ArrayList<Vacation> vacationArrayList= new ArrayList<>();
-        vacationArrayList.addAll(repository.getAllVacations());
-        ArrayList<Integer> vacationIdList= new ArrayList<>();
-        for(Vacation vacation:vacationArrayList){
-            vacationIdList.add(vacation.getVacationID());
-        }
-
-        ArrayAdapter<Integer> vacationIdAdapter= new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item,vacationIdList);
-        Spinner spinner=findViewById(R.id.spinner);
-        spinner.setAdapter(vacationIdAdapter);
- */
 
     private void updateLabelStart() {
         String myFormat = "MM/dd/yy";

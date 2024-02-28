@@ -100,6 +100,8 @@ public class VacationDetails extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         String startDateStr = getIntent().getStringExtra("startDate");
+
+
         if (startDateStr != null && !startDateStr.isEmpty()) {
             try {
                 Date date = sdf.parse(startDateStr);
@@ -134,8 +136,10 @@ public class VacationDetails extends AppCompatActivity {
             myCalendarEnd.set(Calendar.YEAR, year);
             myCalendarEnd.set(Calendar.MONTH, monthOfYear);
             myCalendarEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            validateDates();
             updateLabel(editEndDate, myCalendarEnd);
         };
+
 
 
         editStartDate.setOnClickListener(v -> {
@@ -153,8 +157,19 @@ public class VacationDetails extends AppCompatActivity {
             datePickerDialog.show();
         });
 
+        }
 
+    private void validateDates() {
+        Date startDate = myCalendarStart.getTime();
+        Date endDate = myCalendarEnd.getTime();
+        if (endDate.before(startDate)) {
+            Toast.makeText(this, "End date must be after start date", Toast.LENGTH_SHORT).show();
+            myCalendarEnd.setTime(myCalendarStart.getTime());
+            updateLabel(editEndDate, myCalendarEnd);
+        }
     }
+
+
     private void updateLabel(EditText editText, Calendar calendar) {
         String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
