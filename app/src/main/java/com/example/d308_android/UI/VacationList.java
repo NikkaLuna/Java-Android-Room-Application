@@ -46,6 +46,8 @@ private Repository repository;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+
         if(item.getItemId()==R.id.sample) {
             repository=new Repository(getApplication());
             //Toast.makeText(VacationList.this, "put in sample data",Toast.LENGTH_LONG).show();
@@ -59,9 +61,10 @@ private Repository repository;
             repository.insert(excursion);
             return true;
         }
-        if(item.getItemId()==android.R.id.home) {
-            this.finish();
+        if (itemId == android.R.id.home) {
+            onBackPressed();
             return true;
+
         }
         return true;
     }

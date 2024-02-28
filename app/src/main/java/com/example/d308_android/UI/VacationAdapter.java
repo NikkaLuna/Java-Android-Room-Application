@@ -69,8 +69,6 @@ public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.Vacati
         else{
             holder.vacationItemView.setText("No vacation name");
         }
-
-
     }
 
 
@@ -85,7 +83,5 @@ public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.Vacati
         mVacations=vacations;
         notifyDataSetChanged();
     }
-
-
 
 }
