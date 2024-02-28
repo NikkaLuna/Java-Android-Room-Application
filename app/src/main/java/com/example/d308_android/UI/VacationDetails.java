@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -79,9 +80,10 @@ public class VacationDetails extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Excursion> filteredExcursions = new ArrayList<>();
         for (Excursion p : repository.getAllExcursions()) {
-            if(p.getVacationID() == vacationID) filteredExcursions.add(p);
+            if (p.getVacationID() == vacationID) filteredExcursions.add(p);
         }
         excursionAdapter.setExcursions(filteredExcursions);
+
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton2);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -97,17 +99,18 @@ public class VacationDetails extends AppCompatActivity {
         String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-        String startDateStr = getIntent().getStringExtra("start_date");
+        String startDateStr = getIntent().getStringExtra("startDate");
         if (startDateStr != null && !startDateStr.isEmpty()) {
             try {
                 Date date = sdf.parse(startDateStr);
+                Log.d(getApplicationContext().getPackageName(), "Parsed start date: " + date);
                 myCalendarStart.setTime(date);
                 updateLabel(editStartDate, myCalendarStart);
             } catch (java.text.ParseException e) {
                 e.printStackTrace();
             }
         }
-        String endDateStr = getIntent().getStringExtra("end_date");
+        String endDateStr = getIntent().getStringExtra("endDate");
         if (endDateStr != null && !endDateStr.isEmpty()) {
             try {
                 Date date = sdf.parse(endDateStr);
@@ -150,6 +153,7 @@ public class VacationDetails extends AppCompatActivity {
             datePickerDialog.show();
         });
 
+
     }
     private void updateLabel(EditText editText, Calendar calendar) {
         String myFormat = "MM/dd/yy";
@@ -170,9 +174,6 @@ public class VacationDetails extends AppCompatActivity {
         int itemId = item.getItemId();
 
         if (itemId == R.id.vacationsave) {
-
-            String startDate = editStartDate.getText().toString();
-            String endDate = editEndDate.getText().toString();
 
             Vacation vacation;
 
@@ -209,6 +210,7 @@ public class VacationDetails extends AppCompatActivity {
             } else {
                 Toast.makeText(VacationDetails.this, "Can't delete a product with parts", Toast.LENGTH_LONG).show();
             }
+            this.finish();
             return true;
         }
 
