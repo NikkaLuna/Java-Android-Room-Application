@@ -69,8 +69,8 @@ public class ExcursionAdapter extends RecyclerView.Adapter<ExcursionAdapter.Excu
             holder.excursionItemView.setText("No excursion name");
             holder.excursionItemView.setText("No vacation id");
         }
-
     }
+
     public void setExcursions(List<Excursion> excursions){
         mExcursions=excursions;
         notifyDataSetChanged();

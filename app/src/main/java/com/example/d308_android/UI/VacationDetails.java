@@ -406,11 +406,8 @@ public class VacationDetails extends AppCompatActivity {
 
         return "Vacation Details:\n" +
                 vacationDetails +
-                //"Name: " + name + "\n" +
                 "Price: $" + price + "\n" +
                 "Hotel: " + hotelName + "\n" +
-                //"Start Date: " + startDate + "\n" +
-                //"End Date: " + endDate + "\n" +
                 excursionString;
     }
 

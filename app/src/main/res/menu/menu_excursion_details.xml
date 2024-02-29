@@ -6,7 +6,7 @@
         android:id="@+id/excursionsave"/>
 
     <item android:title="Delete Excursion"
-        android:id="@+id/vacationdelete"/>
+        android:id="@+id/excursiondelete"/>
 
 
     <item android:title="Share Note"
