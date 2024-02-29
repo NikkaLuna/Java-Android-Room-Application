@@ -47,13 +47,19 @@ public class VacationDetails extends AppCompatActivity {
     Repository repository;
     Vacation currentVacation;
     int numExcursions;
-    DatePickerDialog.OnDateSetListener startDate;
-    DatePickerDialog.OnDateSetListener endDate;
+    private Date startDate = new Date();
+
+    private Date endDate = new Date();
+
+
     private Calendar myCalendarStart = Calendar.getInstance();
     private Calendar myCalendarEnd = Calendar.getInstance();
     long startTimeInMillis = myCalendarStart.getTimeInMillis();
     long endTimeInMillis = myCalendarEnd.getTimeInMillis();
     String vacationTitle = "My Vacation";
+
+    private static final int VACATION_START_PENDING_INTENT_ID = 1;
+    private static final int VACATION_END_PENDING_INTENT_ID = 2;
 
 
     @Override
@@ -135,14 +141,15 @@ public class VacationDetails extends AppCompatActivity {
             myCalendarStart.set(Calendar.YEAR, year);
             myCalendarStart.set(Calendar.MONTH, monthOfYear);
             myCalendarStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            startDate = myCalendarStart.getTime(); // Convert Calendar to Date
             updateLabel(editStartDate, myCalendarStart);
         };
-
 
         DatePickerDialog.OnDateSetListener endDateListener = (view, year, monthOfYear, dayOfMonth) -> {
             myCalendarEnd.set(Calendar.YEAR, year);
             myCalendarEnd.set(Calendar.MONTH, monthOfYear);
             myCalendarEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            endDate = myCalendarEnd.getTime(); // Convert Calendar to Date
             validateDates();
             updateLabel(editEndDate, myCalendarEnd);
         };
@@ -273,52 +280,64 @@ public class VacationDetails extends AppCompatActivity {
             startActivity(shareIntent);
             return true;
         }
+
         if (item.getItemId() == R.id.notify) {
             String startDateFromScreen = editStartDate.getText().toString();
             String endDateFromScreen = editEndDate.getText().toString();
+            String vacationName = getIntent().getStringExtra("vacationName");
+
+            Calendar currentCalendar = Calendar.getInstance();
 
             String myFormat = "MM/dd/yy";
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
             Date startDate = null;
             Date endDate = null;
+
             try {
                 startDate = sdf.parse(startDateFromScreen);
                 endDate = sdf.parse(endDateFromScreen);
-            } catch (androidx.core.net.ParseException | java.text.ParseException e) {
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
 
-            if (startDate != null && endDate != null) {
-                Calendar startTimeCalendar = Calendar.getInstance();
-                startTimeCalendar.setTime(startDate);
-                startTimeCalendar.set(Calendar.HOUR_OF_DAY, 0); // Start time at midnight
-                startTimeCalendar.set(Calendar.MINUTE, 0);
-                startTimeCalendar.set(Calendar.SECOND, 0);
+            Calendar startCalendar = Calendar.getInstance();
+            startCalendar.setTime(startDate);
+            long startTrigger = startCalendar.getTimeInMillis();
 
-                Calendar endTimeCalendar = Calendar.getInstance();
-                endTimeCalendar.setTime(endDate);
-                endTimeCalendar.set(Calendar.HOUR_OF_DAY, 23); // End time at 11:59 PM
-                endTimeCalendar.set(Calendar.MINUTE, 59);
-                endTimeCalendar.set(Calendar.SECOND, 59);
+            Calendar endCalendar = Calendar.getInstance();
+            endCalendar.setTime(endDate);
+            long endTrigger = endCalendar.getTimeInMillis();
 
-                long startTimeInMillis = startTimeCalendar.getTimeInMillis();
-                long endTimeInMillis = endTimeCalendar.getTimeInMillis();
+            boolean isStartDate = currentCalendar.get(Calendar.YEAR) == startCalendar.get(Calendar.YEAR) &&
+                    currentCalendar.get(Calendar.MONTH) == startCalendar.get(Calendar.MONTH) &&
+                    currentCalendar.get(Calendar.DAY_OF_MONTH) == startCalendar.get(Calendar.DAY_OF_MONTH);
 
-                String vacationTitle = "My Vacation";
+            boolean isEndDate = currentCalendar.get(Calendar.YEAR) == endCalendar.get(Calendar.YEAR) &&
+                    currentCalendar.get(Calendar.MONTH) == endCalendar.get(Calendar.MONTH) &&
+                    currentCalendar.get(Calendar.DAY_OF_MONTH) == endCalendar.get(Calendar.DAY_OF_MONTH);
 
-                Intent intent = new Intent(VacationDetails.this, MyReceiver.class);
-                intent.setAction("VACATION_ALERT");
-                intent.putExtra("start_time", startTimeInMillis);
-                intent.putExtra("end_time", endTimeInMillis);
-                intent.putExtra("vacation_title", vacationTitle);
-                intent.putExtra("key", "message I want to see");
+            Intent startIntent = null;
+            Intent endIntent = null;
 
-                int pendingIntentId = generateRandomNumber();
+            if (isStartDate) {
+                startIntent = new Intent(VacationDetails.this, MyReceiver.class);
+                startIntent.putExtra("key2", "Your vacation '" + vacationName + "' is starting on " + startDateFromScreen);
 
-                PendingIntent sender = PendingIntent.getBroadcast(VacationDetails.this, pendingIntentId, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                PendingIntent startSender = PendingIntent.getBroadcast(VacationDetails.this, VACATION_START_PENDING_INTENT_ID, startIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, startTimeInMillis, sender);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, startTrigger, startSender);
             }
+
+            if (isEndDate) {
+                endIntent = new Intent(VacationDetails.this, MyReceiver.class);
+                endIntent.putExtra("key3", "Your vacation '" + vacationName + "' is ending on " + endDateFromScreen);
+
+                PendingIntent endSender = PendingIntent.getBroadcast(VacationDetails.this, VACATION_END_PENDING_INTENT_ID, endIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, endTrigger, endSender);
+            }
+
             return true;
         }
 

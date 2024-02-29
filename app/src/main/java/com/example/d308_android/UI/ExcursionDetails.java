@@ -49,6 +49,7 @@ public class ExcursionDetails extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener startDate;
     final Calendar myCalendarStart = Calendar.getInstance();
 
+    private static final int EXCURSION_PENDING_INTENT_ID = 0;
 
 
     @Override
@@ -149,17 +150,9 @@ public class ExcursionDetails extends AppCompatActivity {
     private void updateLabel(EditText editText, Calendar calendar) {
         String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        //editText.setText(sdf.format(calendar.getTime()));
         editDate.setText(sdf.format(myCalendarStart.getTime()));
     }
 
-    /*
-    private void updateLabelStart() {
-        String myFormat = "MM/dd/yy";
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        editDate.setText(sdf.format(myCalendarStart.getTime()));
-    }
-*/
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_excursion_details, menu);
@@ -220,15 +213,14 @@ public class ExcursionDetails extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+
             Long trigger = myDate.getTime();
             Intent intent = new Intent(ExcursionDetails.this, MyReceiver.class);
             intent.putExtra("key", "Your excursion '" + excursionName + "' is starting on " + dateFromScreen);
 
-            int pendingIntentId = generateRandomNumber();
-
-            PendingIntent sender = PendingIntent.getBroadcast(ExcursionDetails.this, pendingIntentId, intent, PendingIntent.FLAG_IMMUTABLE);
+            PendingIntent excursionSender = PendingIntent.getBroadcast(ExcursionDetails.this, EXCURSION_PENDING_INTENT_ID, intent, PendingIntent.FLAG_IMMUTABLE);
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, sender);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, excursionSender);
 
             return true;
         }
