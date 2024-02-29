@@ -56,6 +56,7 @@ public class ExcursionAdapter extends RecyclerView.Adapter<ExcursionAdapter.Excu
             View itemView = mInflater.inflate(R.layout.excursion_list_item, parent, false);
             return new ExcursionViewHolder(itemView);
         }
+
     @Override
     public void onBindViewHolder(@NonNull ExcursionViewHolder holder, int position) {
         if(mExcursions!=null){
@@ -81,7 +82,6 @@ public class ExcursionAdapter extends RecyclerView.Adapter<ExcursionAdapter.Excu
         if(mExcursions!=null) return mExcursions.size();
         else return 0;
     }
-
 }
 
 

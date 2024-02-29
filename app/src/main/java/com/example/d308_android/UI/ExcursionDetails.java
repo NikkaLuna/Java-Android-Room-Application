@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,9 +23,12 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+import com.example.d308_android.database.VacationDatabaseBuilder;
+
 
 
 import com.example.d308_android.R;
+import com.example.d308_android.dao.ExcursionDAO;
 import com.example.d308_android.database.Repository;
 import com.example.d308_android.entities.Excursion;
 import com.example.d308_android.entities.Vacation;
@@ -47,7 +51,7 @@ public class ExcursionDetails extends AppCompatActivity {
     EditText editNote;
     EditText editDate;
     Excursion currentExcursion;
-
+    private int lastExcursionID = -1;
     Repository repository;
 
     DatePickerDialog.OnDateSetListener startDate;
@@ -73,6 +77,12 @@ public class ExcursionDetails extends AppCompatActivity {
         vacationID = getIntent().getIntExtra("vacationID", -1);
         editNote=findViewById(R.id.note);
         editDate=findViewById(R.id.date);
+
+        new Thread(() -> {
+            int lastExcursionID = getLastExcursionIDFromDatabase();
+            runOnUiThread(() -> {
+            });
+        }).start();
 
         String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -121,7 +131,6 @@ public class ExcursionDetails extends AppCompatActivity {
                         myCalendarStart.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-
     }
 
     private void updateLabel(EditText editText, Calendar calendar) {
@@ -145,29 +154,62 @@ public class ExcursionDetails extends AppCompatActivity {
             return true;
         }
 
-        if (item.getItemId() == R.id.excursionsave) {
-            Excursion excursion;
-            if (excursionID == -1) {
-                if (vacationID <= 0) {
-                    Toast.makeText(ExcursionDetails.this, "Please select a vacation for the excursion", Toast.LENGTH_LONG).show();
-                    return true;
-                }
 
-                if (repository.getAllExcursions().size() == 0) {
-                    excursionID = 1;
-                } else {
-                    excursionID = repository.getAllExcursions().get(repository.getAllExcursions().size() - 1).getExcursionID() + 1;
-                }
-                excursion = new Excursion(excursionID, editName.getText().toString(), Double.parseDouble(editPrice.getText().toString()), vacationID, editDate.getText().toString());
-                repository.insert(excursion);
-            } else {
-                excursion = new Excursion(excursionID, editName.getText().toString(), Double.parseDouble(editPrice.getText().toString()), vacationID, editDate.getText().toString());
-                repository.update(excursion);
+        if (item.getItemId() == R.id.excursionsave) {
+
+            if (vacationID <= 0) {
+                Toast.makeText(ExcursionDetails.this, "Please select a vacation for the excursion", Toast.LENGTH_LONG).show();
+                return true;
             }
 
+            Vacation associatedVacation = repository.getVacationById(vacationID);
+            String vacationStartDate = associatedVacation.getStartDate();
+            String vacationEndDate = associatedVacation.getEndDate();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy", Locale.US);
+
+            String excursionDateStr = editDate.getText().toString();
+            try {
+                Date excursionDate = sdf.parse(excursionDateStr);
+
+                Date startDate = sdf.parse(vacationStartDate);
+                Date endDate = sdf.parse(vacationEndDate);
+
+                if (excursionDate.before(startDate) || excursionDate.after(endDate)) {
+                    Toast.makeText(ExcursionDetails.this, "Excursion date must be within the vacation timeframe.", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+            } catch (ParseException | java.text.ParseException e) {
+                e.printStackTrace();
+            }
+            new Thread(() -> {
+
+                Intent intent = getIntent();
+                int excursionID = intent.getIntExtra("excursionID", -1);
+
+                if (excursionID <= 0) {
+                    int lastExcursionID = getLastExcursionIDFromDatabase();
+                    excursionID = (lastExcursionID == -1) ? 1 : lastExcursionID + 1;
+                }
+
+                Excursion excursion = new Excursion(
+                        excursionID,
+                        editName.getText().toString(),
+                        Double.parseDouble(editPrice.getText().toString()),
+                        vacationID,
+                        editDate.getText().toString()
+                );
+
+                if (excursionID <= 0) {
+                    repository.insert(excursion);
+                } else {
+                    repository.update(excursion);
+                }
+            }).start();
             finish();
             return true;
         }
+
 
         if (itemId == R.id.excursiondelete) {
             Excursion currentExcursion = null;
@@ -187,7 +229,6 @@ public class ExcursionDetails extends AppCompatActivity {
             finish();
             return true;
         }
-
 
         if (itemId == R.id.share) {
         Intent sentIntent = new Intent();
@@ -227,8 +268,27 @@ public class ExcursionDetails extends AppCompatActivity {
 
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private int getLastExcursionIDFromDatabase() {
+        int[] result = new int[1];
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                VacationDatabaseBuilder db = VacationDatabaseBuilder.getDatabase(getApplicationContext());
+                ExcursionDAO excursionDao = db.excursionDAO();
+                result[0] = excursionDao.getLastExcursionID();
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return result[0];
     }
 
     private int generateRandomNumber() {

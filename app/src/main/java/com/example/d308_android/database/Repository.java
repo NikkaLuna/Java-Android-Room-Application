@@ -29,6 +29,7 @@ public class Repository {
         mExcursionDAO = db.excursionDAO();
         mVacationDAO = db.vacationDAO();
     }
+
     public void getAllVacationsAsync(Callback<List<Vacation>> callback) {
         databaseExecutor.execute(() -> {
             List<Vacation> vacations = mVacationDAO.getAllVacations();
@@ -42,6 +43,7 @@ public class Repository {
             callback.onResult(excursions);
         });
     }
+
     public List<Vacation> getAllVacations() {
         databaseExecutor.execute(() -> {
             mAllVacations = mVacationDAO.getAllVacations();
@@ -54,6 +56,15 @@ public class Repository {
         }
         return mAllVacations;
     }
+
+        public Vacation getVacationById(int vacationID) {
+            for (Vacation vacation : getAllVacations()) {
+                if (vacation.getVacationID() == vacationID) {
+                    return vacation;
+                }
+            }
+            return null;
+        }
 
     public Vacation findVacationById(List<Vacation> vacations, int vacationId) {
         for (Vacation vacation : vacations) {
@@ -118,6 +129,11 @@ public class Repository {
         }
         return mAllExcursions;
     }
+
+    public Excursion getExcursionById(int excursionID) {
+        return mExcursionDAO.getExcursionById(excursionID);
+    }
+
     public void insert(Excursion excursion){
         databaseExecutor.execute(()->{
             mExcursionDAO.insert(excursion);

@@ -54,8 +54,6 @@ public class VacationDetails extends AppCompatActivity {
     int numExcursions;
     private Date startDate = new Date();
     private Date endDate = new Date();
-
-
     private Calendar myCalendarStart = Calendar.getInstance();
     private Calendar myCalendarEnd = Calendar.getInstance();
     long startTimeInMillis = myCalendarStart.getTimeInMillis();
@@ -68,7 +66,6 @@ public class VacationDetails extends AppCompatActivity {
     private VacationDAO vacationDAO;
     private ExcursionDAO excursionDAO;
     private VacationDatabaseBuilder vacationDatabase;
-
     public VacationDetails(Repository repository) {
         this.repository = repository;
     }
@@ -96,7 +93,6 @@ public class VacationDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vacation_details);
 
-        //this populates the Vacation Details screen when vacation is clicked on from Vacation List
         editName = findViewById(R.id.titletext);
         editPrice = findViewById(R.id.price);
         editHotelName = findViewById(R.id.hotelname);

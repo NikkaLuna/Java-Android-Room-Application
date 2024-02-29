@@ -10,7 +10,6 @@ public class Excursion {
     private String excursionName;
     private double price;
     private int vacationID;
-
     public String startDate;
 
     public Excursion(int excursionID, String excursionName, double price, int vacationID, String startDate) {
