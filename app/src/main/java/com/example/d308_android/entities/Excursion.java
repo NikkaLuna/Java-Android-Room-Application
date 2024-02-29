@@ -61,8 +61,12 @@ public class Excursion {
         this.startDate = startDate;
     }
     public String toString(){
-        return excursionName;
+        return "Excursion: " + excursionName + "\n" +
+                "Date: " + startDate;
+
+        }
+
     }
 
-}
+
 

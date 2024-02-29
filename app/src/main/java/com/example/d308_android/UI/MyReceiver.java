@@ -66,7 +66,6 @@ public class MyReceiver extends BroadcastReceiver {
 
     }
 
-
     private void createNotificationChannel(Context context, String CHANNEL_ID) {
         if (CHANNEL_ID == null || CHANNEL_ID.isEmpty()) {
             CHANNEL_ID = generateRandomChannelId();

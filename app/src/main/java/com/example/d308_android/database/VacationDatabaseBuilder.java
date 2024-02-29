@@ -18,18 +18,18 @@ public abstract class VacationDatabaseBuilder extends RoomDatabase {
     public abstract ExcursionDAO excursionDAO();
     private static volatile VacationDatabaseBuilder INSTANCE;
 
-    static VacationDatabaseBuilder getDatabase(final Context context) {
+    public static VacationDatabaseBuilder getDatabase(final Context context) {
         if(INSTANCE==null){
             synchronized (VacationDatabaseBuilder.class){
                 if(INSTANCE==null){
                     INSTANCE= Room.databaseBuilder(context.getApplicationContext(),VacationDatabaseBuilder.class,"MyVacationDatabase.db")
                             .fallbackToDestructiveMigration()
-                            //.allowMainThreadQueries()
                             .build();
                 }
             }
         }
         return INSTANCE;
     }
-
 }
+
+

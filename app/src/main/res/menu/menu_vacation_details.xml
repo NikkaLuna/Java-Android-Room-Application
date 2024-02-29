@@ -8,7 +8,7 @@
     <item android:title="Delete Vacation"
         android:id="@+id/vacationdelete"/>
 
-    <item android:title="Share Vacation"
+    <item android:title="Share Vacation Details"
         android:orderInCategory="100"
         android:icon="@drawable/baseline_airplanemode_active_24"
         android:id="@+id/share"/>

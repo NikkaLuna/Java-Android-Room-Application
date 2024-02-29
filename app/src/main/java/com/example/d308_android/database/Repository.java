@@ -14,10 +14,13 @@ import java.util.concurrent.Executors;
 public class Repository {
     private ExcursionDAO mExcursionDAO;
     private VacationDAO mVacationDAO;
-
     private List<Vacation> mAllVacations;
     private List<Excursion> mAllExcursions;
 
+    public interface Callback<T> {
+        void onResult(T result);
+        void onError(Exception e);
+    }
     private static int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
@@ -26,7 +29,19 @@ public class Repository {
         mExcursionDAO = db.excursionDAO();
         mVacationDAO = db.vacationDAO();
     }
+    public void getAllVacationsAsync(Callback<List<Vacation>> callback) {
+        databaseExecutor.execute(() -> {
+            List<Vacation> vacations = mVacationDAO.getAllVacations();
+            callback.onResult(vacations);
+        });
+    }
 
+    public void getAssociatedExcursionsAsync(int vacationId, Callback<List<Excursion>> callback) {
+        databaseExecutor.execute(() -> {
+            List<Excursion> excursions = mExcursionDAO.getAssociatedExcursions(vacationId);
+            callback.onResult(excursions);
+        });
+    }
     public List<Vacation> getAllVacations() {
         databaseExecutor.execute(() -> {
             mAllVacations = mVacationDAO.getAllVacations();
@@ -39,6 +54,16 @@ public class Repository {
         }
         return mAllVacations;
     }
+
+    public Vacation findVacationById(List<Vacation> vacations, int vacationId) {
+        for (Vacation vacation : vacations) {
+            if (vacation.getVacationID() == vacationId) {
+                return vacation;
+            }
+        }
+        return null;
+    }
+
     public void insert(Vacation vacation){
         databaseExecutor.execute(()->{
             mVacationDAO.insert(vacation);
@@ -123,6 +148,4 @@ public class Repository {
             throw new RuntimeException(e);
         }
     }
-
-
 }
