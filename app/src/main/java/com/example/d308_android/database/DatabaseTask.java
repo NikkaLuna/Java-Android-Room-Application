@@ -2,9 +2,9 @@ package com.example.d308_android.database;
 
 
 import android.content.Context;
-import android.icu.text.SimpleDateFormat;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
 import com.example.d308_android.entities.Excursion;
 
 public class DatabaseTask extends AsyncTask<Void, Void, Boolean> {
@@ -22,7 +22,6 @@ public class DatabaseTask extends AsyncTask<Void, Void, Boolean> {
         this.excursionDateStr = excursionDateStr;
         this.excursion = excursion;
     }
-
     @Override
     protected Boolean doInBackground(Void... voids) {
         try {
@@ -37,14 +36,4 @@ public class DatabaseTask extends AsyncTask<Void, Void, Boolean> {
             return false;
         }
     }
-
-    @Override
-    protected void onPostExecute(Boolean success) {
-        if (success) {
-            Toast.makeText(context, "Excursion saved successfully", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Failed to save excursion", Toast.LENGTH_SHORT).show();
-        }
-    }
 }
-

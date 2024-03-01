@@ -168,14 +168,6 @@ public class ExcursionDetails extends AppCompatActivity {
 
         if (item.getItemId() == R.id.excursionsave) {
 
-            Context context = this;
-            Handler handler = new Handler(Looper.getMainLooper());
-
-            if (vacationID <= 0) {
-                Toast.makeText(ExcursionDetails.this, "Please save associated vacation before attempting to save excursion.", Toast.LENGTH_LONG).show();
-                return true;
-            }
-
             Vacation associatedVacation = repository.getVacationById(vacationID);
             String vacationStartDate = associatedVacation.getStartDate();
             String vacationEndDate = associatedVacation.getEndDate();
@@ -188,7 +180,7 @@ public class ExcursionDetails extends AppCompatActivity {
                 Date endDate = sdf.parse(vacationEndDate);
 
                 if (excursionDate.before(startDate) || excursionDate.after(endDate)) {
-                    Toast.makeText(ExcursionDetails.this, "Excursion date must be within the vacation timeframe.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Excursion date must be within the vacation timeframe.", Toast.LENGTH_LONG).show();
                     return true;
                 }
 
@@ -201,22 +193,13 @@ public class ExcursionDetails extends AppCompatActivity {
                     }
                     excursion = new Excursion(excursionID, editName.getText().toString(), Double.parseDouble(editPrice.getText().toString()), vacationID, editDate.getText().toString());
                     repository.insert(excursion);
+                     Toast.makeText(this, "Excursion saved successfully", Toast.LENGTH_SHORT).show();
                 } else {
                     excursion = new Excursion(excursionID, editName.getText().toString(), Double.parseDouble(editPrice.getText().toString()), vacationID, editDate.getText().toString());
                     repository.update(excursion);
+                     Toast.makeText(this, "Excursion updated successfully", Toast.LENGTH_SHORT).show();
                 }
-
-                new Thread(new Runnable() {
-                    public void run() {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                ExcursionDetails.saveExcursion(context, vacationID, repository, excursionDateStr, excursion);
-                                //finish();
-                            }
-                        });
-                    }
-                }).start();
-
+                finish();
                 return true;
 
             } catch (ParseException | java.text.ParseException e) {
@@ -224,7 +207,6 @@ public class ExcursionDetails extends AppCompatActivity {
                 return false;
             }
         }
-
 
 
         if (itemId == R.id.excursiondelete) {
@@ -284,34 +266,6 @@ public class ExcursionDetails extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-
-    public static void saveExcursion(Context context, int vacationID, Repository repository, String excursionDateStr, Excursion excursion) {
-        if (vacationID <= 0) {
-            Toast.makeText(context, "Please select a vacation for the excursion.", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        Vacation associatedVacation = repository.getVacationById(vacationID);
-        String vacationStartDate = associatedVacation.getStartDate();
-        String vacationEndDate = associatedVacation.getEndDate();
-
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy", Locale.US);
-        try {
-            Date excursionDate = sdf.parse(excursionDateStr);
-            Date startDate = sdf.parse(vacationStartDate);
-            Date endDate = sdf.parse(vacationEndDate);
-
-            if (excursionDate.before(startDate) || excursionDate.after(endDate)) {
-                Toast.makeText(context, "Excursion date must be within the vacation timeframe.", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            new DatabaseTask(context, vacationID, repository, excursionDateStr, excursion).execute();
-        } catch (ParseException | java.text.ParseException e) {
-            e.printStackTrace();
-        }
     }
 
 

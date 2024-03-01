@@ -138,22 +138,15 @@ public class Repository {
         databaseExecutor.execute(()->{
             mExcursionDAO.insert(excursion);
         });
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
+
     public void update(Excursion excursion){
         databaseExecutor.execute(()->{
             mExcursionDAO.update(excursion);
         });
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
+
+
     public void delete(Excursion excursion){
         databaseExecutor.execute(()->{
             mExcursionDAO.delete(excursion);
