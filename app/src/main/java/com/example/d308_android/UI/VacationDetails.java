@@ -260,7 +260,7 @@ public class VacationDetails extends AppCompatActivity {
                 repository.delete(currentVacation);
                 Toast.makeText(VacationDetails.this, currentVacation.getVacationName() + " was deleted", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(VacationDetails.this, "Can't delete a product with parts", Toast.LENGTH_LONG).show();
+                Toast.makeText(VacationDetails.this, "Can't delete a vacation with excursions.", Toast.LENGTH_LONG).show();
             }
             this.finish();
             return true;
@@ -379,12 +379,6 @@ public class VacationDetails extends AppCompatActivity {
         });
     }
 
-    private Vacation findVacationById(int vacationId) {
-        List<Vacation> vacations = repository.getAllVacations();
-        Vacation vacation = repository.findVacationById(vacations, vacationId);
-        return vacation;
-    }
-
     private String createShareText(String name, String price, String hotelName, String startDate, String endDate, Vacation vacation, List<Excursion> excursions) {
         String vacationDetails = "Vacation Name: " + vacation.getVacationName() + "\n" +
                 "Start Date: " + vacation.getStartDate() + "\n" +
@@ -424,11 +418,6 @@ public class VacationDetails extends AppCompatActivity {
             Log.e(TAG, message);
         }
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    private int generateRandomNumber() {
-        Random random = new Random();
-        return random.nextInt(1000);
     }
 
     @Override

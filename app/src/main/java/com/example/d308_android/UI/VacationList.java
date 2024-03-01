@@ -50,7 +50,6 @@ private Repository repository;
 
         if(item.getItemId()==R.id.sample) {
             repository=new Repository(getApplication());
-            //Toast.makeText(VacationList.this, "put in sample data",Toast.LENGTH_LONG).show();
             Vacation vacation=new Vacation(0, "Thailand", 1500, "Hilton Hotel", "02/01/24", "02/20/24");
             repository.insert(vacation);
             vacation=new Vacation(0, "Japan", 1500, "Miaki Hotel", "02/02/24", "02/19/24");
@@ -75,8 +74,6 @@ private Repository repository;
         return true;
     }
 
-    //UPDATES VACATIONS UPON SAVE
-    //retrieves items from the database again and puts it on the recycler view
     @Override
     protected void onResume() {
         super.onResume();
@@ -87,5 +84,4 @@ private Repository repository;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         vacationAdapter.setVacations(allVacations);
     }
-
 }

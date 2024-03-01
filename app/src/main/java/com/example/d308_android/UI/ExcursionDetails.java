@@ -12,9 +12,13 @@ import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import android.widget.AdapterView;
@@ -23,9 +27,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+import com.example.d308_android.database.DatabaseTask;
+
+
 import com.example.d308_android.database.VacationDatabaseBuilder;
-
-
 
 import com.example.d308_android.R;
 import com.example.d308_android.dao.ExcursionDAO;
@@ -33,10 +38,13 @@ import com.example.d308_android.database.Repository;
 import com.example.d308_android.entities.Excursion;
 import com.example.d308_android.entities.Vacation;
 
-import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+
 
 public class ExcursionDetails extends AppCompatActivity {
 
@@ -50,7 +58,6 @@ public class ExcursionDetails extends AppCompatActivity {
     EditText editPrice;
     EditText editNote;
     EditText editDate;
-    Excursion currentExcursion;
     private int lastExcursionID = -1;
     Repository repository;
 
@@ -58,6 +65,10 @@ public class ExcursionDetails extends AppCompatActivity {
     final Calendar myCalendarStart = Calendar.getInstance();
 
     private static final int EXCURSION_PENDING_INTENT_ID = 0;
+
+    private ExecutorService backgroundExecutor = Executors.newSingleThreadExecutor();
+
+    private Handler mainHandler = new Handler(Looper.getMainLooper());
 
 
     @Override
@@ -157,8 +168,11 @@ public class ExcursionDetails extends AppCompatActivity {
 
         if (item.getItemId() == R.id.excursionsave) {
 
+            Context context = this;
+            Handler handler = new Handler(Looper.getMainLooper());
+
             if (vacationID <= 0) {
-                Toast.makeText(ExcursionDetails.this, "Please select a vacation for the excursion", Toast.LENGTH_LONG).show();
+                Toast.makeText(ExcursionDetails.this, "Please save associated vacation before attempting to save excursion.", Toast.LENGTH_LONG).show();
                 return true;
             }
 
@@ -167,11 +181,9 @@ public class ExcursionDetails extends AppCompatActivity {
             String vacationEndDate = associatedVacation.getEndDate();
 
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy", Locale.US);
-
             String excursionDateStr = editDate.getText().toString();
             try {
                 Date excursionDate = sdf.parse(excursionDateStr);
-
                 Date startDate = sdf.parse(vacationStartDate);
                 Date endDate = sdf.parse(vacationEndDate);
 
@@ -179,36 +191,40 @@ public class ExcursionDetails extends AppCompatActivity {
                     Toast.makeText(ExcursionDetails.this, "Excursion date must be within the vacation timeframe.", Toast.LENGTH_LONG).show();
                     return true;
                 }
-            } catch (ParseException | java.text.ParseException e) {
-                e.printStackTrace();
-            }
-            new Thread(() -> {
 
-                Intent intent = getIntent();
-                int excursionID = intent.getIntExtra("excursionID", -1);
-
-                if (excursionID <= 0) {
-                    int lastExcursionID = getLastExcursionIDFromDatabase();
-                    excursionID = (lastExcursionID == -1) ? 1 : lastExcursionID + 1;
-                }
-
-                Excursion excursion = new Excursion(
-                        excursionID,
-                        editName.getText().toString(),
-                        Double.parseDouble(editPrice.getText().toString()),
-                        vacationID,
-                        editDate.getText().toString()
-                );
-
-                if (excursionID <= 0) {
+                Excursion excursion;
+                if (excursionID == -1) {
+                    if (repository.getAllExcursions().isEmpty()) {
+                        excursionID = 1;
+                    } else {
+                        excursionID = repository.getAllExcursions().get(repository.getAllExcursions().size() - 1).getExcursionID() + 1;
+                    }
+                    excursion = new Excursion(excursionID, editName.getText().toString(), Double.parseDouble(editPrice.getText().toString()), vacationID, editDate.getText().toString());
                     repository.insert(excursion);
                 } else {
+                    excursion = new Excursion(excursionID, editName.getText().toString(), Double.parseDouble(editPrice.getText().toString()), vacationID, editDate.getText().toString());
                     repository.update(excursion);
                 }
-            }).start();
-            finish();
-            return true;
+
+                new Thread(new Runnable() {
+                    public void run() {
+                        handler.post(new Runnable() {
+                            public void run() {
+                                ExcursionDetails.saveExcursion(context, vacationID, repository, excursionDateStr, excursion);
+                                //finish();
+                            }
+                        });
+                    }
+                }).start();
+
+                return true;
+
+            } catch (ParseException | java.text.ParseException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
+
 
 
         if (itemId == R.id.excursiondelete) {
@@ -219,12 +235,11 @@ public class ExcursionDetails extends AppCompatActivity {
                     break;
                 }
             }
-
             if (currentExcursion != null) {
                 repository.delete(currentExcursion);
-                Toast.makeText(ExcursionDetails.this, currentExcursion.getExcursionName() + " was deleted", Toast.LENGTH_LONG).show();
+                Toast.makeText(ExcursionDetails.this, currentExcursion.getExcursionName() + " was deleted.", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(ExcursionDetails.this, "Excursion not found", Toast.LENGTH_LONG).show();
+                Toast.makeText(ExcursionDetails.this, "Excursion not found.", Toast.LENGTH_LONG).show();
             }
             finish();
             return true;
@@ -269,6 +284,34 @@ public class ExcursionDetails extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public static void saveExcursion(Context context, int vacationID, Repository repository, String excursionDateStr, Excursion excursion) {
+        if (vacationID <= 0) {
+            Toast.makeText(context, "Please select a vacation for the excursion.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Vacation associatedVacation = repository.getVacationById(vacationID);
+        String vacationStartDate = associatedVacation.getStartDate();
+        String vacationEndDate = associatedVacation.getEndDate();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy", Locale.US);
+        try {
+            Date excursionDate = sdf.parse(excursionDateStr);
+            Date startDate = sdf.parse(vacationStartDate);
+            Date endDate = sdf.parse(vacationEndDate);
+
+            if (excursionDate.before(startDate) || excursionDate.after(endDate)) {
+                Toast.makeText(context, "Excursion date must be within the vacation timeframe.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            new DatabaseTask(context, vacationID, repository, excursionDateStr, excursion).execute();
+        } catch (ParseException | java.text.ParseException e) {
+            e.printStackTrace();
+        }
     }
 
 

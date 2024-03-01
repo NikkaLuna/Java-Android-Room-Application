@@ -51,7 +51,6 @@ public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.Vacati
         }
     }
 
-
     @NonNull
     @Override
     public VacationAdapter.VacationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -70,7 +69,6 @@ public class VacationAdapter extends RecyclerView.Adapter<VacationAdapter.Vacati
             holder.vacationItemView.setText("No vacation name");
         }
     }
-
 
     @Override
     public int getItemCount() {
