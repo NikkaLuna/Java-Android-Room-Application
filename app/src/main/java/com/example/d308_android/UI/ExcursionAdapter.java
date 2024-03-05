@@ -22,13 +22,13 @@ public class ExcursionAdapter extends RecyclerView.Adapter<ExcursionAdapter.Excu
     private final LayoutInflater mInflater;
 
     class ExcursionViewHolder extends RecyclerView.ViewHolder {
-        private final TextView excursionItemView;
-        private final TextView excursionItemView2;
+        private TextView excursionNameTextView = null;
+
 
         private ExcursionViewHolder(View itemView) {
             super(itemView);
-            excursionItemView = itemView.findViewById(R.id.textView3);
-            excursionItemView2 = itemView.findViewById(R.id.textView4);
+            excursionNameTextView = itemView.findViewById(R.id.excursionNameTextView);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -59,16 +59,12 @@ public class ExcursionAdapter extends RecyclerView.Adapter<ExcursionAdapter.Excu
 
     @Override
     public void onBindViewHolder(@NonNull ExcursionViewHolder holder, int position) {
-        if(mExcursions!=null){
-            Excursion current=mExcursions.get(position);
-            String name=current.getExcursionName();
-            int vacationID= current.getVacationID();
-            holder.excursionItemView.setText(name);
-            holder.excursionItemView2.setText(Integer.toString(vacationID));
-        }
-        else{
-            holder.excursionItemView.setText("No excursion name");
-            holder.excursionItemView.setText("No vacation id");
+        if (mExcursions != null && position < mExcursions.size()) {
+            Excursion current = mExcursions.get(position);
+            String name = current.getExcursionName();
+            holder.excursionNameTextView.setText(name);
+        } else {
+            holder.excursionNameTextView.setText("No excursion name");
         }
     }
 

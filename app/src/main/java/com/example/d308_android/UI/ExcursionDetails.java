@@ -131,7 +131,7 @@ public class ExcursionDetails extends AppCompatActivity {
             public void onClick(View v) {
                 Date date;
                 String info=editDate.getText().toString();
-                if(info.equals(""))info="02/20/24";
+                if(info.equals(""))info="03/05/24";
                 try{
                     myCalendarStart.setTime(sdf.parse(info));
                 } catch (ParseException | java.text.ParseException e) {
@@ -167,6 +167,11 @@ public class ExcursionDetails extends AppCompatActivity {
 
 
         if (item.getItemId() == R.id.excursionsave) {
+
+            if (vacationID <= 0) {
+                Toast.makeText(ExcursionDetails.this, "Please save associated vacation before attempting to save excursion.", Toast.LENGTH_LONG).show();
+                return true;
+            }
 
             Vacation associatedVacation = repository.getVacationById(vacationID);
             String vacationStartDate = associatedVacation.getStartDate();

@@ -56,9 +56,6 @@ public class VacationDetails extends AppCompatActivity {
     private Date endDate = new Date();
     private Calendar myCalendarStart = Calendar.getInstance();
     private Calendar myCalendarEnd = Calendar.getInstance();
-    long startTimeInMillis = myCalendarStart.getTimeInMillis();
-    long endTimeInMillis = myCalendarEnd.getTimeInMillis();
-    String vacationTitle = "My Vacation";
 
     private static final int VACATION_START_PENDING_INTENT_ID = 1;
     private static final int VACATION_END_PENDING_INTENT_ID = 2;
@@ -167,6 +164,7 @@ public class VacationDetails extends AppCompatActivity {
             myCalendarStart.set(Calendar.MONTH, monthOfYear);
             myCalendarStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             startDate = myCalendarStart.getTime();
+            validateStartDate();
             updateLabel(editStartDate, myCalendarStart);
         };
 
@@ -175,10 +173,9 @@ public class VacationDetails extends AppCompatActivity {
             myCalendarEnd.set(Calendar.MONTH, monthOfYear);
             myCalendarEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             endDate = myCalendarEnd.getTime();
-            validateDates();
+            validateEndDate();
             updateLabel(editEndDate, myCalendarEnd);
         };
-
 
         editStartDate.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(VacationDetails.this, startDateListener,
@@ -197,13 +194,25 @@ public class VacationDetails extends AppCompatActivity {
 
     }
 
-    private void validateDates() {
+    private void validateEndDate() {
         Date startDate = myCalendarStart.getTime();
         Date endDate = myCalendarEnd.getTime();
+
         if (endDate.before(startDate)) {
             Toast.makeText(this, "End date must be after start date", Toast.LENGTH_SHORT).show();
             myCalendarEnd.setTime(myCalendarStart.getTime());
             updateLabel(editEndDate, myCalendarEnd);
+        }
+    }
+
+    private void validateStartDate() {
+        Date startDate = myCalendarStart.getTime();
+        Date endDate = myCalendarEnd.getTime();
+
+        if (startDate.after(endDate)) {
+            Toast.makeText(this, "Start date must be before end date", Toast.LENGTH_SHORT).show();
+            myCalendarStart.setTime(myCalendarEnd.getTime());
+            updateLabel(editStartDate, myCalendarStart);
         }
     }
 
@@ -249,26 +258,29 @@ public class VacationDetails extends AppCompatActivity {
 
         if (itemId == R.id.vacationdelete) {
             for (Vacation vacation : repository.getAllVacations()) {
-                if (vacation.getVacationID() == vacationID) currentVacation = vacation;
+                if (vacation.getVacationID() == vacationID) {
+                    currentVacation = vacation;
+                    break;
+                }
             }
-            numExcursions = 0;
+            int numExcursions = 0;
             for (Excursion excursion : repository.getAllExcursions()) {
-                if (excursion.getVacationID() == vacationID) ++numExcursions;
-                VacationDetails.this.finish();
+                if (excursion.getVacationID() == vacationID) {
+                    ++numExcursions;
+                }
             }
             if (numExcursions == 0) {
                 repository.delete(currentVacation);
                 Toast.makeText(VacationDetails.this, currentVacation.getVacationName() + " was deleted", Toast.LENGTH_LONG).show();
+                finish();
             } else {
                 Toast.makeText(VacationDetails.this, "Can't delete a vacation with excursions.", Toast.LENGTH_LONG).show();
             }
-            this.finish();
-            return true;
+
         } else if (itemId == R.id.addSampleExcursions) {
             Toast.makeText(VacationDetails.this, "Put in sample data", Toast.LENGTH_LONG).show();
-            return true;
-
         }
+
 
         if (itemId == R.id.share) {
             shareVacationDetails();
@@ -360,18 +372,15 @@ public class VacationDetails extends AppCompatActivity {
                             String shareText = createShareText(name, price, hotelName, startDate, endDate, currentVacation, excursions);
                             shareVacation(shareText);
                         }
-
                         @Override
                         public void onError(Exception e) {
                             handleShareError("Error retrieving associated excursions", e);
                         }
                     });
-
                 } else {
                     handleShareError("Could not find vacation details", null);
                 }
             }
-
             @Override
             public void onError(Exception e) {
                 handleShareError("Error retrieving vacations", e);
