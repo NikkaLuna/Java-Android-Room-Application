@@ -1,63 +1,40 @@
 
 # Modernizing Travel Agency's Legacy Back-End with Android and Room Framework
 
-## Features
-
-1. Store Vacations in a list allowing you to manage them.
-2. Add, update, and delete vacations.
-3. Allow multiple vacations to be added.
-4. Validate if there are excursions associated with a vacation before deletion.
-5. Title of the vacation (e.g., Bermuda Trip, Spring Break, London Trip).
-6. Hotel or other places you would be staying.
-
-### Vacation Features:
-
-1. View all vacation details.
-2. Enter, edit, and delete vacations.
-3. Check to make sure end dates occur after start dates.
-4. Validate date format (mm/dd/yyyy).
-5. Set Start and End date alerts.
-6. Share a vacation by e-mail, clipboard, or SMS.
-
-### Vacation List:
-
-1. View all excursions associated with each vacation.
-
-### Excursion Details:
-
-1. Title (e.g., Snorkeling, Hiking, Bus Tour, or Cooking Lesson).
-2. Date.
-
-### Excursion Features:
-
-1. Display a detailed view of the excursion.
-2. Validate the input dates are in the correct format (mm/dd/yyyy).
-3. Set an alert for the excursion on the specified date, stating the excursion title.
-4. Validate the excursion happens during the associated vacation.
-
-## Motivation
-
-- Migrate crucial functionalities from the legacy system to current technology.
-- Use Room Framework as an Abstraction layer on the local SQLite database for persistent data manipulation.
-- Built-in data storage functionalities provided by Room Framework ensure efficient data storage.
-- Implement new features in the next Iteration.
-
-## Usage
-
-To use this Android application, follow the guide mentioned below:
-
-1. Clone the repository in your local machine.
-2. Open the project in Android Studio or any other compatible IDE.
-3. Ensure Android SDK installed with Android 8.0 (API level 26) as your target.
-4. Build and run the application on your Android device or emulator.
-5. Use the user interface to add, update, or delete vacations and excursions.
-6. Test the application using different tests and use cases for the proper functionality of the application.
-
-## Contributors
-
-Contributions to this project are welcome. If you discover any issues, bugs, or have recommendations for improvements, please feel free to open an issue or submit a pull request. Your intervention is important to helping us keep this project up-to-date with the best and latest. Please make sure that your contribution suits our standard and follows the project objectives.
 
 
+ANDROID VACATION PLANNER APP
+ 
+SCENARIO
+ 
+The Android Vacation Planner App simplifies the process of planning your vacations and associated excursions, ensuring that all your vacation details are saved and available for future reference. 
+ 
+FEATURES:
+ 
+•      With the Android Vacation Planner App, you can create, update, and delete Vacations.  Add as many vacations as you need, update them with any changes, and delete them when they are either past or when your plans have changed. 
+•      Vacation View: The Android Vacation Planner App View displays all the details of each vacation, including the title, location, start and end dates, and associated excursions. You can also edit and delete vacation information from this view.
+•      Excursion Management: Keep track of each excursion that you add to your vacation.  You can add, update, and delete excursions as needed, ensuring that your itinerary is seamlessly scheduled and tracked.
+•      Vacation Alerts: Set alerts for the days when your vacation starts and ends.  This feature is also available for excursion dates so that you never miss an important activity.  The app prevents you from accidentally entering dates with incorrect formatting and prevents you from accidentally trying to schedule an excursion outside of your scheduled vacation.  
+•      Share Vacations with Friends and Family: Easily share vacation details with others via email, clipboard, or SMS using the built-in sharing feature.
+ 
+ 
+USING THE APPLICATION:
+ 
+•      Download and Install: Download the app from the Google Play Store and install it on your Android device.
+•      To create a new vacation, navigate to the "Vacation List" option by clicking the “Enter” button.  From there, fill in the required vacation details such as title, hotel, price, start date, and end date. Click on the "Save Vacation" button to add the vacation to your itinerary.
+•      To update an existing vacation, navigate first to the “Vacation List” screen and then to the “Vacation Details” screen by clicking the button at the bottom right of the screen.  Make the necessary changes and then click on the “Save Vacation” button to update your itinerary.
+•      To delete a vacation, navigate first to the “Vacation List” screen and then to the “Vacation Details” screen by clicking the button at the bottom right of the screen.  In the dropdown menu, click “Delete Vacation”. Note that if your vacation has excursions associated with it, you will first need to delete them before you can delete your vacation.  
+ 
+CONTRIBUTIONS:
+ 
+Contributions to this project are welcome. Feel free submit pull requests so to incorporate new features or improve upon any existing functionality.  
+ 
+ 
+ANDROID VERSION THE SIGNED APK IS DEPLOYED ON:
+ 
+The signed APK is deployed with a target SDK version of 34, ensuring compatibility with Android devices running API level 34 and above.
+ 
+ 
 
 
 ## Authors
