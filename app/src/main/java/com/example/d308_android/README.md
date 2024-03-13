@@ -1,27 +1,24 @@
 # ANDROID VACATION PLANNER APP
 
-## SCENARIO
-
-The Android Vacation Planner App simplifies the process of planning your vacations and associated excursions, ensuring that all your vacation details are saved and available for future reference.
+The Android Vacation Planner App saves all your vacation details, making them available to you for reference anytime you need them. Using the Android Vacation Planner App, you can create vacations, update them anytime you make changes, and and delete them if your plans change.  Add as many vacations as you need.
 
 ## FEATURES
 
-- **Vacation Management:** Create, update, and delete vacations. Add as many vacations as needed, update them with any changes, and delete them when they are either past or when your plans have changed.
-- **Vacation View:** Display all the details of each vacation, including title, location, start and end dates, and associated excursions. Edit and delete vacation information from this view.
-- **Excursion Management:** Keep track of each excursion added to a vacation. Add, update, and delete excursions as needed, ensuring a seamless itinerary schedule.
-- **Vacation Alerts:** Set alerts for vacation start and end dates, as well as for excursion dates, to never miss an important activity. The app prevents entering incorrect date formats or trying to schedule an excursion outside of the vacation period.
-- **Share Vacations:** Easily share vacation details via email, clipboard, or SMS using the built-in sharing feature.
+- **View your Vacation:** This app shows you the details of each vacation, including the title, location, start and end date, and any excursions associated with it.
+- **Manage Excursions:** Track each excursion you add to your vacation. You can add excursions, update them, or delete them when no longer needed, keeping your schedule for your vacation seamlessly organized.
+- **Vacation & Excursion Alerts:** Set alerts for the day you start and finish your vacation so that you never forget. In addition, you may also set alerts for excursion dates so that you never miss an activity you had planned. The app will let you know if you try to schedule an excursion on a day outside the range of your vacation.
+- **Share Vacation Details:** You can share the details of your vacation with friends and family via email, clipboard, or SMS.
 
 ## USING THE APPLICATION
 
-1. **Download and Install:** Download the app from the Google Play Store and install it on your Android device.
-2. **Creating a Vacation:** Navigate to the "Vacation List" option, fill in the required vacation details, and click "Save Vacation".
-3. **Updating a Vacation:** Navigate to the "Vacation List" screen, then to "Vacation Details", make changes, and click "Save Vacation" to update.
-4. **Deleting a Vacation:** Navigate to the "Vacation List" screen, then to "Vacation Details", and click "Delete Vacation" from the dropdown menu. Delete associated excursions first if necessary.
+1. **Download and Install:** First, download and install the app from the Google Play Store.
+2. **Creating a Vacation:** Click on the “Enter” button to go to the “Vacation List” screen and then click the ‘add’ button.  Enter the vacation details such as a title, hotel, price, start date and end date.  Click on the “Save Vacation” button from the dropdown menu to store the vacation in your itinerary.
+3. **Updating a Vacation:** To make changes to an existing vacation: Go to the “Vacation List” screen. Select the vacation you would like to update.  This will take you to the “Vacation Details” screen.  Make your changes and select the “Save Vacation” button from the dropdown menu to update your itinerary.  Before you can add an excursion, you need to first add and save your vacation that the excursion will be associated with.
+4. **Deleting a Vacation:** To delete a vacation: Go to the “Vacation List” screen and select the vacation you would like to delete.  In the “Vacation Details” screen, in the dropdown menu, select the option to “Delete Vacation”. If your vacation has excursions associated with it, you will need to delete them before you can delete your vacation.
 
 ## CONTRIBUTIONS
 
-Contributions to this project are welcome. Feel free to submit pull requests to incorporate new features or improve existing functionality.
+We welcome contributions to this project. Whether you’d like to add a new feature or fix a bug, feel free to contribute.
 
 ## ANDROID VERSION
 
@@ -29,4 +26,4 @@ The signed APK is deployed with a target SDK version of 34, ensuring compatibili
 
 ## LINK TO GIT REPOSITORY
 
-[GitLab Repository](https://gitlab.com/wgu-gitlab-environment/student-repos/ahaye74/d308-mobile-application-development-android/-/commits/working_branch_d308?ref_type=heads)
+https://gitlab.com/wgu-gitlab-environment/student-repos/ahaye74/d308-mobile-application-development-android.git

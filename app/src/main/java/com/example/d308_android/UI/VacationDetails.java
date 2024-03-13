@@ -6,20 +6,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+import android.view.View;
+
+import android.view.View;
+import android.widget.EditText;
+import android.widget.DatePicker;
+import android.app.DatePickerDialog;
+import java.util.Calendar;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import android.app.AlarmManager;
-import android.app.DatePickerDialog;
+
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.icu.text.SimpleDateFormat;
-import android.icu.util.Calendar;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
+
 import android.widget.Toast;
 
 import com.example.d308_android.R;
@@ -52,6 +59,7 @@ public class VacationDetails extends AppCompatActivity {
     Repository repository;
     Vacation currentVacation;
     int numExcursions;
+
     private Date startDate = new Date();
     private Date endDate = new Date();
     private Calendar myCalendarStart = Calendar.getInstance();
@@ -164,7 +172,6 @@ public class VacationDetails extends AppCompatActivity {
             myCalendarStart.set(Calendar.MONTH, monthOfYear);
             myCalendarStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             startDate = myCalendarStart.getTime();
-            validateStartDate();
             updateLabel(editStartDate, myCalendarStart);
         };
 
@@ -173,9 +180,10 @@ public class VacationDetails extends AppCompatActivity {
             myCalendarEnd.set(Calendar.MONTH, monthOfYear);
             myCalendarEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             endDate = myCalendarEnd.getTime();
-            validateEndDate();
+            validateDates();
             updateLabel(editEndDate, myCalendarEnd);
         };
+
 
         editStartDate.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(VacationDetails.this, startDateListener,
@@ -194,7 +202,25 @@ public class VacationDetails extends AppCompatActivity {
 
     }
 
-    private void validateEndDate() {
+    private void validateDates() {
+        Date startDate = myCalendarStart.getTime();
+        Date endDate = myCalendarEnd.getTime();
+        if (endDate.before(startDate)) {
+            Toast.makeText(this, "End date must be after start date", Toast.LENGTH_SHORT).show();
+            myCalendarEnd.setTime(myCalendarStart.getTime());
+            updateLabel(editEndDate, myCalendarEnd);
+        }
+    }
+
+    private void updateLabel(EditText editText, Calendar calendar) {
+        String myFormat = "MM/dd/yy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        editText.setText(sdf.format(calendar.getTime()));
+    }
+
+
+
+        private void validateEndDate() {
         Date startDate = myCalendarStart.getTime();
         Date endDate = myCalendarEnd.getTime();
 
@@ -216,11 +242,7 @@ public class VacationDetails extends AppCompatActivity {
         }
     }
 
-    private void updateLabel(EditText editText, Calendar calendar) {
-        String myFormat = "MM/dd/yy";
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        editText.setText(sdf.format(calendar.getTime()));
-    }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_vacation_details, menu);
@@ -444,3 +466,4 @@ public class VacationDetails extends AppCompatActivity {
         excursionAdapter.setExcursions(filteredExcursions);
     }
 }
+

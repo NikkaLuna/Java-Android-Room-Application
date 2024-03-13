@@ -95,6 +95,8 @@ public class ExcursionDetails extends AppCompatActivity {
             });
         }).start();
 
+
+
         String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
