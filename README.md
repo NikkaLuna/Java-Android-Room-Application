@@ -1,28 +1,46 @@
-<strong> **DO NOT DISTRIBUTE OR PUBLICLY POST SOLUTIONS TO THESE LABS. MAKE ALL FORKS OF THIS REPOSITORY WITH SOLUTION CODE PRIVATE. PLEASE REFER TO THE STUDENT CODE OF CONDUCT AND ETHICAL EXPECTATIONS FOR COLLEGE OF INFORMATION TECHNOLOGY STUDENTS FOR SPECIFICS. ** </strong>
 
-# WESTERN GOVERNOR UNIVERSITY 
-## D308 – MOBILE APPLICATION DEVELOPMENT (ANDROID)
-Welcome to Mobile Application Development (Android)! This is an opportunity for students to create page layouts with clean navigation, design mobile application infrastructure and user interfaces, develop secure database-backed mobile applications in an object-oriented language, document solutions for application requirements with storyboards and emulators, articulate challenges in the development process, and describe alternatives methods in overcoming mobile application development problems. 
+# Modernizing Travel Agency's Legacy Back-End with Android and Room Framework
 
-FOR SPECIFIC TASK INSTRUCTIONS AND REQUIREMENTS FOR THIS ASSESSMENT, PLEASE REFER TO THE COURSE PAGE.
-## BASIC INSTRUCTIONS
-For this assessment, you have an opportunity to test your competency as a mobile application developer. Your understanding of mobile application structure and design will help you to develop applications to meet customer requirements. This task will allow you to demonstrate your ability to apply the skills learned in the course.
+## SCENARIO
 
-## SUPPLEMENTAL RESOURCES 
-1.	How to clone a project to Android Studio using Git?
+The Android Vacation Planner App simplifies the process of planning your vacations and associated excursions, ensuring that all your vacation details are saved and available for future reference.
 
-> Ensure that Android Studio and Git are installed on your system.  New Project, Get from VCS button or the File/New/Project from Version Control. This will open a window  with a prompt to clone the project. Save it in a safe location for the directory and press clone. IntelliJ will prompt you for your credentials. Enter in your WGU Credentials and the project will be cloned onto your local machine.
+## FEATURES:
 
-2. How to create a branch and start Development?
+- **Create, Update, and Delete Vacations**: Add, update, and delete vacations as needed.
+- **Vacation View**: Display all vacation details, including title, location, start and end dates, and associated excursions. Edit and delete vacation information.
+- **Excursion Management**: Add, update, and delete excursions for each vacation.
+- **Vacation Alerts**: Set alerts for vacation and excursion dates to ensure timely reminders.
+- **Share Vacations with Friends and Family**: Share vacation details via email, clipboard, or SMS.
 
-- GitLab method
-> Press the '+' button located near your branch name. In the dropdown list, press the 'New branch' button. This will allow you to create a name for your branch. Once the branch has been named, you can select 'Create Branch' to push the branch to your repository.
+## USING THE APPLICATION:
 
-- Android Studio method
-> In Android Studio, Go to the 'Git' button on the top toolbar. Select the new branch option and create a name for the branch. Make sure checkout branch is selected and press create. You can now add a commit message and push the new branch to the local repo.
+1. **Download and Install**: Download the app from the Google Play Store and install it on your Android device.
+2. **Create a New Vacation**: Navigate to the "Vacation List" option, fill in required vacation details, and click "Save Vacation" to add it to your itinerary.
+3. **Update Existing Vacation**: Navigate to the "Vacation List" and then to "Vacation Details", make necessary changes, and click "Save Vacation" to update.
+4. **Delete a Vacation**: Navigate to the "Vacation List" and then to "Vacation Details", click "Delete Vacation". Note: Delete associated excursions before deleting a vacation.
 
-## SUPPORT
-If you need additional support, please navigate to the course page and reach out to your course instructor.
-## FUTURE USE
-Take this opportunity to create or add to a simple resume portfolio to highlight and showcase your work for future use in career search, experience, and education!
+## CONTRIBUTIONS:
+
+Contributions to this project are welcome. Feel free to submit pull requests to incorporate new features or improve existing functionality.
+
+## ANDROID VERSION THE SIGNED APK IS DEPLOYED ON:
+
+The signed APK is deployed with a target SDK version of 34, ensuring compatibility with Android devices running API level 34 and above.
+
+
+
+## Authors
+
+- [@NikkaLuna](https://github.com/NikkaLuna)
+
+
+## 🚀 About Me
+I'm a student developer with an emphasis on Java, C++, and Python.  
+
+
+## 🔗 Links
+[![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://andreachristinehayes.wixsite.com/andreahayesart/)
+[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/andrea-hayes-msml/)
+[![twitter](https://img.shields.io/badge/twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/AHayes_Ninja_)
 
